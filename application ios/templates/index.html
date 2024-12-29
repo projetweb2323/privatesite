@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Photos et Vidéos</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Bienvenue sur votre espace privé</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*,video/*" required>
+        <button type="submit">Télécharger</button>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <h2>Vos Images :</h2>
+    <div class="gallery">
+        {% for file in files %}
+        {% if file.endswith(('png', 'jpg', 'jpeg', 'gif')) %}
+        <div class="file-item">
+            <img src="/files/{{ file }}" alt="{{ file }}" class="file-preview">
+            <form action="/delete/{{ file }}" method="post" class="delete-form">
+                <button type="submit" class="delete-button">Supprimer</button>
+            </form>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <h2>Vos Vidéos :</h2>
+    <div class="video-gallery">
+        {% for file in files %}
+        {% if file.endswith(('mp4', 'mov', 'avi', 'mkv')) %}
+        <div class="file-item">
+            <video controls class="file-preview">
+                <source src="/files/{{ file }}" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
+            <form action="/delete/{{ file }}" method="post" class="delete-form">
+                <button type="submit" class="delete-button">Supprimer</button>
+            </form>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</body>
+</html>
